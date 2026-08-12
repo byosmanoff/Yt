@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StreamVault Pro — Premium YouTube Video & Audio Converter</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            500: '#0284c7',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                        },
+                        accent: {
+                            violet: '#8b5cf6',
+                            rose: '#f43f5e',
+                            amber: '#f59e0b'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'Inter', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'glow-light': '0 20px 40px -15px rgba(2, 132, 199, 0.15)',
+                        'glow-dark': '0 20px 50px -10px rgba(139, 92, 246, 0.25)',
+                        'glass-light': '0 8px 32px 0 rgba(31, 38, 135, 0.07)',
+                        'glass-dark': '0 8px 32px 0 rgba(0, 0, 0, 0.37)'
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            transition: background-color 0.4s ease, color 0.4s ease;
+        }
+
+        /* Light Mode Styling */
+        body.light-mode {
+            background-color: #F8FAFC;
+            color: #0F172A;
+        }
+        body.light-mode .glass-box {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            box-shadow: 0 20px 40px -15px rgba(148, 163, 184, 0.2);
+        }
+        body.light-mode .glass-card {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(241, 245, 249, 1);
+        }
+        body.light-mode .input-bg {
+            background: #FFFFFF;
+            border-color: #CBD5E1;
+            color: #0F172A;
+        }
+        body.light-mode .subtext {
+            color: #64748B;
+        }
+        body.light-mode .modal-bg {
+            background: #FFFFFF;
+            color: #0F172A;
+        }
+
+        /* Dark Mode Styling */
+        body.dark {
+            background-color: #090D16;
+            color: #F8FAFC;
+        }
+        body.dark .glass-box {
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+        body.dark .glass-card {
+            background: rgba(30, 41, 59, 0.4);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        body.dark .input-bg {
+            background: rgba(15, 23, 42, 0.8);
+            border-color: rgba(255, 255, 255, 0.12);
+            color: #FFFFFF;
+        }
+        body.dark .subtext {
+            color: #94A3B8;
+        }
+        body.dark .modal-bg {
+            background: #0F172A;
+            color: #FFFFFF;
+        }
+
+        /* Gradient Texts */
+        .gradient-brand {
+            background: linear-gradient(135deg, #0284C7 0%, #6366F1 50%, #8B5CF6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Smooth accordion transition */
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out, padding 0.3s ease;
+        }
+        .faq-item.active .faq-answer {
+            max-height: 300px;
+            padding-top: 12px;
+        }
+        .faq-item.active .faq-icon {
+            transform: rotate(180deg);
+        }
+    </style>
+</head>
+<body class="light-mode min-h-screen flex flex-col justify-between selection:bg-sky-500 selection:text-white transition-colors duration-300">
+
+    <!-- Ambient Gradient Backdrops -->
+    <div class="fixed top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-gradient-to-tr from-sky-400/20 via-indigo-500/15 to-purple-500/20 blur-[140px] pointer-events-none -z-10"></div>
+    <div class="fixed bottom-0 right-0 w-[600px] h-[600px] bg-amber-400/10 blur-[180px] pointer-events-none -z-10"></div>
+
+    <!-- Navigation Bar -->
+    <header class="sticky top-0 z-50 glass-box border-b">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <!-- Brand Logo -->
+            <a href="#" class="flex items-center gap-3 group">
+                <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-sky-500 via-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-sky-500/20 group-hover:scale-105 transition-all duration-300">
+                    <i data-lucide="zap" class="w-6 h-6 text-white"></i>
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-xl font-extrabold tracking-tight flex items-center gap-1">
+                        Stream<span class="gradient-brand">Vault</span>
+                    </span>
+                    <span class="text-[10px] subtext tracking-widest uppercase font-bold">Ultra Studio Edition</span>
+                </div>
+            </a>
+
+            <!-- Navigation Links -->
+            <nav class="hidden md:flex items-center gap-8 text-sm font-semibold subtext">
+                <a href="#converter" class="hover:text-sky-500 transition-colors" data-i18n="navConverter">Converter</a>
+                <a href="#features" class="hover:text-sky-500 transition-colors" data-i18n="navFeatures">Features</a>
+                <a href="#faq" class="hover:text-sky-500 transition-colors" data-i18n="navFAQ">FAQ</a>
+            </nav>
+
+            <!-- Actions: Language & Theme Switches -->
+            <div class="flex items-center gap-3">
+                <!-- Language Selector Dropdown -->
+                <div class="relative inline-block text-left">
+                    <button id="langToggleBtn" onclick="toggleLangMenu()" class="px-3 py-2 rounded-xl glass-card text-xs font-bold flex items-center gap-2 hover:bg-sky-500/10 transition-all border">
+                        <i data-lucide="globe" class="w-4 h-4 text-sky-500"></i>
+                        <span id="currentLangText">EN</span>
+                        <i data-lucide="chevron-down" class="w-3.5 h-3.5 opacity-60"></i>
+                    </button>
+                    <div id="langMenu" class="hidden absolute right-0 mt-2 w-32 rounded-xl glass-box shadow-xl py-2 z-50 text-xs font-semibold">
+                        <button onclick="setLanguage('en')" class="w-full text-left px-4 py-2 hover:bg-sky-500/10 flex items-center justify-between">
+                            <span>English</span>
+                            <span class="text-[10px] text-sky-500 font-mono">EN</span>
+                        </button>
+                        <button onclick="setLanguage('tr')" class="w-full text-left px-4 py-2 hover:bg-sky-500/10 flex items-center justify-between">
+                            <span>Türkçe</span>
+                            <span class="text-[10px] text-sky-500 font-mono">TR</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Theme Switcher (Light / Dark) -->
+                <button id="themeToggleBtn" onclick="toggleTheme()" class="p-2.5 rounded-xl glass-card hover:bg-sky-500/10 transition-all border text-amber-500 dark:text-sky-400">
+                    <i id="themeIcon" data-lucide="sun" class="w-5 h-5"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-grow max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-20 w-full">
+
+        <!-- Hero Title Section -->
+        <section class="text-center space-y-6 pt-6 pb-10">
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-card border text-xs font-bold text-sky-600 dark:text-sky-400 shadow-sm">
+                <i data-lucide="sparkles" class="w-4 h-4 text-amber-500"></i>
+                <span data-i18n="heroBadge">Next-Gen High Speed YouTube Engine</span>
+            </div>
+
+            <h1 class="text-4xl sm:text-6xl font-black tracking-tight leading-tight max-w-4xl mx-auto">
+                <span data-i18n="heroTitleStart">Convert & Download YouTube Media in</span> 
+                <span class="gradient-brand" data-i18n="heroTitleGradient">Highest Fidelity</span>
+            </h1>
+
+            <p class="subtext text-base sm:text-lg max-w-2xl mx-auto leading-relaxed" data-i18n="heroDesc">
+                Extract pristine 4K UHD video streams or uncompressed 320kbps MP3 audio instantly. Clean, secure, and unlimited.
+            </p>
+        </section>
+
+        <!-- Downloader Box -->
+        <section id="converter" class="max-w-3xl mx-auto">
+            <div class="glass-box p-4 sm:p-6 rounded-3xl relative shadow-glow-light dark:shadow-glow-dark">
+                
+                <div class="flex flex-col sm:flex-row items-center gap-3">
+                    <div class="relative w-full flex items-center">
+                        <div class="absolute left-4 text-sky-500">
+                            <i data-lucide="link-2" class="w-5 h-5"></i>
+                        </div>
+                        <input 
+                            type="text" 
+                            id="urlInput"
+                            placeholder="Paste YouTube video or Shorts link here..." 
+                            data-i18n-ph="inputPlaceholder"
+                            class="input-bg w-full border text-sm sm:text-base rounded-2xl pl-12 pr-28 py-4 focus:outline-none focus:ring-2 focus:ring-sky-500 transition-all font-medium"
+                        />
+                        <button 
+                            id="pasteBtn"
+                            class="absolute right-3 px-3.5 py-2 text-xs font-bold subtext hover:text-sky-500 bg-slate-100 dark:bg-slate-800 rounded-xl border transition-all flex items-center gap-1.5">
+                            <i data-lucide="clipboard" class="w-3.5 h-3.5"></i>
+                            <span data-i18n="btnPaste">Paste</span>
+                        </button>
+                    </div>
+
+                    <button 
+                        id="fetchBtn"
+                        class="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-sky-500 via-indigo-600 to-purple-600 hover:opacity-95 text-white font-extrabold rounded-2xl transition-all duration-300 flex items-center justify-center gap-2 shadow-lg shadow-sky-500/30 whitespace-nowrap cursor-pointer">
+                        <span data-i18n="btnConvert">Convert</span>
+                        <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Loading Spinner State -->
+            <div id="loader" class="hidden my-8 p-8 text-center glass-card rounded-3xl border">
+                <div class="inline-block animate-spin rounded-full h-10 w-10 border-4 border-sky-500 border-t-transparent"></div>
+                <p class="mt-4 text-sm font-semibold subtext" data-i18n="loadingText">Analyzing media metadata and preparing high-speed download links...</p>
+            </div>
+
+            <!-- Error State -->
+            <div id="errorBox" class="hidden my-8 p-6 text-center glass-card rounded-3xl border border-rose-500/30 text-rose-500 text-sm font-bold"></div>
+
+            <!-- Conversion Result Card -->
+            <div id="resultCard" class="hidden mt-8 glass-box p-6 sm:p-8 rounded-3xl shadow-2xl transition-all">
+                <div class="flex flex-col md:flex-row gap-6 items-start">
+                    
+                    <!-- Video Thumbnail -->
+                    <div class="relative w-full md:w-72 aspect-video rounded-2xl overflow-hidden shadow-md flex-shrink-0 group">
+                        <img id="thumbImg" src="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?q=80&w=800" alt="Thumbnail" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-black/30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                            <i data-lucide="play-circle" class="w-12 h-12 text-white"></i>
+                        </div>
+                        <span id="videoDuration" class="absolute bottom-2.5 right-2.5 px-2 py-0.5 text-xs font-bold bg-black/80 text-white rounded-md">12:34</span>
+                    </div>
+
+                    <!-- Video Details & Tabs -->
+                    <div class="flex-grow w-full space-y-5">
+                        <div>
+                            <h3 id="videoTitle" class="text-lg font-extrabold line-clamp-2 leading-snug">
+                                Complete Web Development Masterclass 2026 - Zero to Hero
+                            </h3>
+                            <p id="channelName" class="text-xs subtext mt-1.5 flex items-center gap-1 font-semibold">
+                                <i data-lucide="check-circle-2" class="w-4 h-4 text-sky-500"></i>
+                                TechAcademy Pro
+                            </p>
+                        </div>
+
+                        <!-- Tab Selection (MP4 vs MP3) -->
+                        <div class="flex p-1.5 bg-slate-200/60 dark:bg-slate-900/80 rounded-2xl border w-fit">
+                            <button id="tabVideo" onclick="switchTab('video')" class="px-6 py-2.5 text-xs font-extrabold rounded-xl bg-sky-500 text-white transition-all shadow-md">
+                                🎬 Video (MP4)
+                            </button>
+                            <button id="tabAudio" onclick="switchTab('audio')" class="px-6 py-2.5 text-xs font-bold subtext hover:text-sky-500 transition-all">
+                                🎧 Audio (MP3)
+                            </button>
+                        </div>
+
+                        <!-- MP4 Video Formats -->
+                        <div id="videoOptions" class="space-y-2.5"></div>
+
+                        <!-- MP3 Audio Formats -->
+                        <div id="audioOptions" class="hidden space-y-2.5"></div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Grid -->
+        <section id="features" class="mt-28 space-y-12">
+            <div class="text-center space-y-3">
+                <h2 class="text-3xl font-black" data-i18n="featTitle">Why Choose StreamVault?</h2>
+                <p class="subtext text-sm max-w-xl mx-auto" data-i18n="featDesc">Engineered with cutting-edge cloud infrastructure for zero latency downloads.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="glass-box p-8 rounded-3xl border hover:-translate-y-1 transition-all duration-300">
+                    <div class="w-12 h-12 rounded-2xl bg-sky-500/10 border border-sky-500/20 flex items-center justify-center text-sky-500 mb-6">
+                        <i data-lucide="zap" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-lg font-bold mb-2" data-i18n="feat1Title">Instant Conversion</h3>
+                    <p class="subtext text-xs leading-relaxed" data-i18n="feat1Desc">Direct stream extraction without queueing or server-side throttling.</p>
+                </div>
+
+                <div class="glass-box p-8 rounded-3xl border hover:-translate-y-1 transition-all duration-300">
+                    <div class="w-12 h-12 rounded-2xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-500 mb-6">
+                        <i data-lucide="disc" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-lg font-bold mb-2" data-i18n="feat2Title">Lossless Audio Extraction</h3>
+                    <p class="subtext text-xs leading-relaxed" data-i18n="feat2Desc">Retain maximum acoustic dynamic range with true 320kbps MP3 encoding.</p>
+                </div>
+
+                <div class="glass-box p-8 rounded-3xl border hover:-translate-y-1 transition-all duration-300">
+                    <div class="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-500 mb-6">
+                        <i data-lucide="shield-check" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-lg font-bold mb-2" data-i18n="feat3Title">Privacy Guaranteed</h3>
+                    <p class="subtext text-xs leading-relaxed" data-i18n="feat3Desc">No account registration required, no cookies tracking your search history.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ Section (Accordion) -->
+        <section id="faq" class="mt-28 space-y-8 max-w-3xl mx-auto">
+            <div class="text-center space-y-3">
+                <h2 class="text-3xl font-black" data-i18n="faqTitle">Frequently Asked Questions</h2>
+                <p class="subtext text-sm" data-i18n="faqDesc">Got questions? We have got answers.</p>
+            </div>
+
+            <div class="space-y-4">
+                <!-- FAQ Item 1 -->
+                <div class="faq-item glass-box rounded-2xl border p-5 cursor-pointer" onclick="toggleFaq(this)">
+                    <div class="flex items-center justify-between">
+                        <h3 class="font-bold text-sm sm:text-base" data-i18n="faq1Q">Is StreamVault completely free to use?</h3>
+                        <i data-lucide="chevron-down" class="faq-icon w-5 h-5 subtext transition-transform"></i>
+                    </div>
+                    <div class="faq-answer subtext text-xs sm:text-sm leading-relaxed" data-i18n="faq1A">
+                        Yes, StreamVault is 100% free with no hidden fees, subscriptions, or conversion limits.
+                    </div>
+                </div>
+
+                <!-- FAQ Item 2 -->
+                <div class="faq-item glass-box rounded-2xl border p-5 cursor-pointer" onclick="toggleFaq(this)">
+                    <div class="flex items-center justify-between">
+                        <h3 class="font-bold text-sm sm:text-base" data-i18n="faq2Q">Can I convert YouTube Shorts to MP3 or MP4?</h3>
+                        <i data-lucide="chevron-down" class="faq-icon w-5 h-5 subtext transition-transform"></i>
+                    </div>
+                    <div class="faq-answer subtext text-xs sm:text-sm leading-relaxed" data-i18n="faq2A">
+                        Absolutely! Just paste the YouTube Shorts URL into the conversion box, and select your desired format.
+                    </div>
+                </div>
+
+                <!-- FAQ Item 3 -->
+                <div class="faq-item glass-box rounded-2xl border p-5 cursor-pointer" onclick="toggleFaq(this)">
+                    <div class="flex items-center justify-between">
+                        <h3 class="font-bold text-sm sm:text-base" data-i18n="faq3Q">Does it work on Mobile devices (iOS & Android)?</h3>
+                        <i data-lucide="chevron-down" class="faq-icon w-5 h-5 subtext transition-transform"></i>
+                    </div>
+                    <div class="faq-answer subtext text-xs sm:text-sm leading-relaxed" data-i18n="faq3A">
+                        Yes! StreamVault is optimized for desktop, tablets, and smartphones without needing any app installation.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t glass-box mt-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 flex flex-col md:flex-row items-center justify-between gap-6">
+            
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-xl bg-sky-500 flex items-center justify-center text-white">
+                    <i data-lucide="zap" class="w-4 h-4"></i>
+                </div>
+                <span class="text-sm font-extrabold tracking-tight">StreamVault Pro</span>
+            </div>
+
+            <!-- Author & Rights -->
+            <p class="text-xs subtext text-center">
+                &copy; 2026 StreamVault. All rights reserved. Designed by <span class="font-bold text-sky-500">osmanoff</span>
+            </p>
+
+            <!-- Mandatory Legal Modals / Links -->
+            <div class="flex flex-wrap justify-center gap-6 text-xs font-semibold subtext">
+                <button onclick="openModal('about')" class="hover:text-sky-500 transition-colors" data-i18n="linkAbout">About Us</button>
+                <button onclick="openModal('privacy')" class="hover:text-sky-500 transition-colors" data-i18n="linkPrivacy">Privacy Policy</button>
+                <button onclick="openModal('cookies')" class="hover:text-sky-500 transition-colors" data-i18n="linkCookies">Cookie Policy</button>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Legal Modals Container -->
+    <div id="legalModal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="modal-bg max-w-xl w-full p-6 sm:p-8 rounded-3xl shadow-2xl relative border border-white/10 max-h-[80vh] overflow-y-auto">
+            <button onclick="closeModal()" class="absolute top-5 right-5 p-2 rounded-full hover:bg-slate-500/10 transition-all">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+            <h3 id="modalTitle" class="text-xl font-bold mb-4"></h3>
+            <div id="modalBody" class="text-xs sm:text-sm subtext leading-relaxed space-y-3"></div>
+        </div>
+    </div>
+
+    <!-- Translations & JavaScript Logic -->
+    <script>
+        // Translations Dictionary
+        const i18n = {
+            en: {
+                navConverter: "Converter",
+                navFeatures: "Features",
+                navFAQ: "FAQ",
+                heroBadge: "Next-Gen High Speed YouTube Engine",
+                heroTitleStart: "Convert & Download YouTube Media in",
+                heroTitleGradient: "Highest Fidelity",
+                heroDesc: "Extract pristine 4K UHD video streams or uncompressed 320kbps MP3 audio instantly. Clean, secure, and unlimited.",
+                inputPlaceholder: "Paste YouTube video or Shorts link here...",
+                btnPaste: "Paste",
+                btnConvert: "Convert",
+                loadingText: "Analyzing media metadata and preparing high-speed download links...",
+                btnDownload: "Download",
+                featTitle: "Why Choose StreamVault?",
+                featDesc: "Engineered with cutting-edge cloud infrastructure for zero latency downloads.",
+                feat1Title: "Instant Conversion",
+                feat1Desc: "Direct stream extraction without queueing or server-side throttling.",
+                feat2Title: "Lossless Audio Extraction",
+                feat2Desc: "Retain maximum acoustic dynamic range with true 320kbps MP3 encoding.",
+                feat3Title: "Privacy Guaranteed",
+                feat3Desc: "No account registration required, no cookies tracking your search history.",
+                faqTitle: "Frequently Asked Questions",
+                faqDesc: "Got questions? We have got answers.",
+                faq1Q: "Is StreamVault completely free to use?",
+                faq1A: "Yes, StreamVault is 100% free with no hidden fees, subscriptions, or conversion limits.",
+                faq2Q: "Can I convert YouTube Shorts to MP3 or MP4?",
+                faq2A: "Absolutely! Just paste the YouTube Shorts URL into the conversion box, and select your desired format.",
+                faq3Q: "Does it work on Mobile devices (iOS & Android)?",
+                faq3A: "Yes! StreamVault is optimized for desktop, tablets, and smartphones without needing any app installation.",
+                linkAbout: "About Us",
+                linkPrivacy: "Privacy Policy",
+                linkCookies: "Cookie Policy",
+                modalAboutTitle: "About StreamVault",
+                modalAboutBody: "StreamVault is an advanced online media utility designed to convert public YouTube videos into high-quality MP4 video and MP3 audio formats effortlessly. Our goal is to provide a fast, ad-free, and sleek interface for personal media archiving.",
+                modalPrivacyTitle: "Privacy Policy",
+                modalPrivacyBody: "We respect your privacy. StreamVault does not log your conversion history, store personal user data, or track IP addresses. All video processing is handled dynamically on ephemeral cloud instances.",
+                modalCookiesTitle: "Cookie Policy",
+                modalCookiesBody: "StreamVault uses essential cookies strictly necessary to remember your theme preferences (Light/Dark) and language selection. We do not employ third-party tracking or advertising cookies."
+            },
+            tr: {
+                navConverter: "Dönüştürücü",
+                navFeatures: "Özellikler",
+                navFAQ: "SSS",
+                heroBadge: "Yeni Nesil Yüksek Hızlı YouTube Altyapısı",
+                heroTitleStart: "YouTube Medyalarını En Yüksek",
+                heroTitleGradient: "Kalitede İndirin",
+                heroDesc: "4K UHD video akışlarını veya sıkıştırılmamış 320kbps MP3 seslerini anında çıkarın. Temiz, güvenli ve sınırsız.",
+                inputPlaceholder: "YouTube video veya Shorts bağlantısını buraya yapıştırın...",
+                btnPaste: "Yapıştır",
+                btnConvert: "Dönüştür",
+                loadingText: "Medya bilgileri analiz ediliyor ve yüksek hızlı indirme bağlantıları hazırlanıyor...",
+                btnDownload: "İndir",
+                featTitle: "Neden StreamVault?",
+                featDesc: "Sıfır gecikmeli indirmeler için en son bulut altyapısıyla geliştirildi.",
+                feat1Title: "Anında Dönüştürme",
+                feat1Desc: "Kuyrukta beklemeden doğrudan yüksek hızlı medya çıkarma.",
+                feat2Title: "Kayıpsız Ses Çıkarma",
+                feat2Desc: "Gerçek 320kbps MP3 kodlaması ile maksimum ses kalitesini koruyun.",
+                feat3Title: "Gizlilik Garantisi",
+                feat3Desc: "Üyelik kaydı gerekmez, arama geçmişinizi takip eden çerezler kullanılmaz.",
+                faqTitle: "Sıkça Sorulan Sorular",
+                faqDesc: "Sorularınız mı var? Cevaplarımız hazır.",
+                faq1Q: "StreamVault kullanımı tamamen ücretsiz mi?",
+                faq1A: "Evet, StreamVault hiçbir gizli ücret, abonelik veya limit olmadan %100 ücretsizdir.",
+                faq2Q: "YouTube Shorts videolarını MP3 veya MP4'e dönüştürebilir miyim?",
+                faq2A: "Kesinlikle! YouTube Shorts bağlantısını kutuya yapıştırmanız ve istediğiniz formatı seçmeniz yeterlidir.",
+                faq3Q: "Mobil cihazlarda (iOS & Android) çalışıyor mu?",
+                faq3A: "Evet! StreamVault, herhangi bir uygulama yüklemeye gerek kalmadan tüm cihazlarda sorunsuz çalışır.",
+                linkAbout: "Hakkımızda",
+                linkPrivacy: "Gizlilik Politikası",
+                linkCookies: "Çerez Politikası",
+                modalAboutTitle: "StreamVault Hakkında",
+                modalAboutBody: "StreamVault, herkese açık YouTube videolarını yüksek kaliteli MP4 ve MP3 formatlarına dönüştürmek için tasarlanmış gelişmiş bir çevrimiçi medya aracıdır. Amacımız kişisel medya arşivleme için hızlı, reklamsız ve şık bir arayüz sunmaktır.",
+                modalPrivacyTitle: "Gizlilik Politikası",
+                modalPrivacyBody: "Gizliliğinize saygı duyuyoruz. StreamVault dönüştürme geçmişinizi kaydetmez, kişisel kullanıcı verilerini saklamaz veya IP adreslerini izlemez.",
+                modalCookiesTitle: "Çerez Politikası",
+                modalCookiesBody: "StreamVault yalnızca tema tercihlerinizi (Açık/Koyu) ve dil seçiminizi hatırlamak için gerekli olan temel çerezleri kullanır. Üçüncü taraf izleme veya reklam çerezleri kullanmıyoruz."
+            }
+        };
+
+        let currentLang = 'en';
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            document.getElementById('currentLangText').innerText = lang.toUpperCase();
+            
+            // Translate Text Content
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (i18n[lang][key]) {
+                    el.innerText = i18n[lang][key];
+                }
+            });
+
+            // Translate Placeholders
+            document.querySelectorAll('[data-i18n-ph]').forEach(el => {
+                const key = el.getAttribute('data-i18n-ph');
+                if (i18n[lang][key]) {
+                    el.placeholder = i18n[lang][key];
+                }
+            });
+
+            document.getElementById('langMenu').classList.add('hidden');
+        }
+
+        function toggleLangMenu() {
+            document.getElementById('langMenu').classList.toggle('hidden');
+        }
+
+        // Theme Toggle Logic (Light / Dark)
+        function toggleTheme() {
+            const body = document.body;
+            const icon = document.getElementById('themeIcon');
+            
+            if (body.classList.contains('light-mode')) {
+                body.classList.remove('light-mode');
+                body.classList.add('dark');
+                document.documentElement.classList.add('dark');
+                icon.setAttribute('data-lucide', 'moon');
+            } else {
+                body.classList.remove('dark');
+                document.documentElement.classList.remove('dark');
+                body.classList.add('light-mode');
+                icon.setAttribute('data-lucide', 'sun');
+            }
+            lucide.createIcons();
+        }
+
+        // FAQ Accordion Toggle
+        function toggleFaq(element) {
+            element.classList.toggle('active');
+        }
+
+        // Modal Logic for Legal Pages
+        function openModal(type) {
+            const modal = document.getElementById('legalModal');
+            const title = document.getElementById('modalTitle');
+            const body = document.getElementById('modalBody');
+
+            if(type === 'about') {
+                title.innerText = i18n[currentLang].modalAboutTitle;
+                body.innerText = i18n[currentLang].modalAboutBody;
+            } else if(type === 'privacy') {
+                title.innerText = i18n[currentLang].modalPrivacyTitle;
+                body.innerText = i18n[currentLang].modalPrivacyBody;
+            } else if(type === 'cookies') {
+                title.innerText = i18n[currentLang].modalCookiesTitle;
+                body.innerText = i18n[currentLang].modalCookiesBody;
+            }
+
+            modal.classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('legalModal').classList.add('hidden');
+        }
+
+        // Clipboard Paste
+        document.getElementById('pasteBtn').addEventListener('click', async () => {
+            try {
+                const text = await navigator.clipboard.readText();
+                document.getElementById('urlInput').value = text;
+            } catch (err) {
+                alert('Clipboard access denied or empty.');
+            }
+        });
+
+        // Real backend call: fetch video info
+        let currentUrl = '';
+
+        document.getElementById('fetchBtn').addEventListener('click', () => {
+            const url = document.getElementById('urlInput').value.trim();
+            const errorBox = document.getElementById('errorBox');
+            errorBox.classList.add('hidden');
+
+            if (!url) {
+                alert(currentLang === 'en' ? 'Please paste a valid YouTube URL!' : 'Lütfen geçerli bir YouTube bağlantısı girin!');
+                return;
+            }
+
+            currentUrl = url;
+            document.getElementById('loader').classList.remove('hidden');
+            document.getElementById('resultCard').classList.add('hidden');
+
+            fetch('/api/info', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ url })
+            })
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById('loader').classList.add('hidden');
+
+                if (data.error) {
+                    errorBox.textContent = data.error;
+                    errorBox.classList.remove('hidden');
+                    return;
+                }
+
+                document.getElementById('thumbImg').src = data.thumbnail || '';
+                document.getElementById('videoTitle').textContent = data.title || '';
+                document.getElementById('channelName').textContent = data.channel || '';
+                document.getElementById('videoDuration').textContent = data.duration || '';
+
+                renderVideoOptions(url);
+                renderAudioOptions(url);
+
+                document.getElementById('resultCard').classList.remove('hidden');
+                document.getElementById('resultCard').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            })
+            .catch(() => {
+                document.getElementById('loader').classList.add('hidden');
+                errorBox.textContent = currentLang === 'en' ? 'Something went wrong. Please try again.' : 'Bir hata oluştu. Lütfen tekrar deneyin.';
+                errorBox.classList.remove('hidden');
+            });
+        });
+
+        function renderVideoOptions(url) {
+            const qualities = [
+                { value: '1080', label: 'FHD 1080p', badgeClass: 'bg-indigo-500/10 text-indigo-500 border-indigo-500/20' },
+                { value: '720', label: 'HD 720p', badgeClass: 'bg-sky-500/10 text-sky-500 border-sky-500/20' },
+                { value: '480', label: 'SD 480p', badgeClass: 'bg-slate-500/10 text-slate-500 border-slate-500/20' }
+            ];
+            const container = document.getElementById('videoOptions');
+            container.innerHTML = qualities.map(q => `
+                <div class="flex items-center justify-between p-3.5 rounded-2xl glass-card border hover:border-sky-500/50 transition-all">
+                    <div class="flex items-center gap-3">
+                        <span class="px-2.5 py-1 text-[10px] font-black rounded-lg border ${q.badgeClass}">${q.label}</span>
+                        <span class="text-xs font-bold">MP4</span>
+                    </div>
+                    <a href="/api/download?url=${encodeURIComponent(url)}&mode=video&quality=${q.value}" class="px-4 py-2 bg-sky-500 hover:bg-sky-600 text-white text-xs font-bold rounded-xl transition-all flex items-center gap-1.5 shadow-md">
+                        <i data-lucide="download" class="w-3.5 h-3.5"></i> <span>${i18n[currentLang].btnDownload}</span>
+                    </a>
+                </div>
+            `).join('');
+            lucide.createIcons();
+        }
+
+        function renderAudioOptions(url) {
+            const qualities = [
+                { value: '320', label: '320 Kbps' },
+                { value: '192', label: '192 Kbps' },
+                { value: '128', label: '128 Kbps' }
+            ];
+            const container = document.getElementById('audioOptions');
+            container.innerHTML = qualities.map(q => `
+                <div class="flex items-center justify-between p-3.5 rounded-2xl glass-card border hover:border-purple-500/50 transition-all">
+                    <div class="flex items-center gap-3">
+                        <span class="px-2.5 py-1 text-[10px] font-black bg-purple-500/10 text-purple-500 rounded-lg border border-purple-500/20">${q.label}</span>
+                        <span class="text-xs font-bold">MP3</span>
+                    </div>
+                    <a href="/api/download?url=${encodeURIComponent(url)}&mode=audio&quality=${q.value}" class="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold rounded-xl transition-all flex items-center gap-1.5 shadow-md">
+                        <i data-lucide="music" class="w-3.5 h-3.5"></i> <span>${i18n[currentLang].btnDownload}</span>
+                    </a>
+                </div>
+            `).join('');
+            lucide.createIcons();
+        }
+
+        // Tab Switcher (MP4 / MP3)
+        function switchTab(type) {
+            const tabVideo = document.getElementById('tabVideo');
+            const tabAudio = document.getElementById('tabAudio');
+            const videoOptions = document.getElementById('videoOptions');
+            const audioOptions = document.getElementById('audioOptions');
+
+            if (type === 'video') {
+                tabVideo.className = "px-6 py-2.5 text-xs font-extrabold rounded-xl bg-sky-500 text-white transition-all shadow-md";
+                tabAudio.className = "px-6 py-2.5 text-xs font-bold subtext hover:text-sky-500 transition-all";
+                videoOptions.classList.remove('hidden');
+                audioOptions.classList.add('hidden');
+            } else {
+                tabAudio.className = "px-6 py-2.5 text-xs font-extrabold rounded-xl bg-purple-600 text-white transition-all shadow-md";
+                tabVideo.className = "px-6 py-2.5 text-xs font-bold subtext hover:text-sky-500 transition-all";
+                audioOptions.classList.remove('hidden');
+                videoOptions.classList.add('hidden');
+            }
+        }
+
+        // Initialize Icons & Language
+        lucide.createIcons();
+        setLanguage('en');
+    </script>
+</body>
+</html>
