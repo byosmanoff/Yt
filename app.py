@@ -8,6 +8,23 @@ import re
 
 app = Flask(__name__)
 FFMPEG_PATH = imageio_ffmpeg.get_ffmpeg_exe()
+COOKIES_PATH = "/etc/secrets/cookies.txt"
+
+
+def get_common_opts():
+    opts = {
+        "quiet": True,
+        "no_warnings": True,
+        "noplaylist": True,
+        "extractor_args": {
+            "youtube": {
+                "player_client": ["android", "web"],
+            }
+        },
+    }
+    if os.path.exists(COOKIES_PATH):
+        opts["cookiefile"] = COOKIES_PATH
+    return opts
 
 
 @app.route("/")
@@ -34,10 +51,8 @@ def info():
         return jsonify({"error": "Zəhmət olmasa bir YouTube linki daxil edin."}), 400
 
     ydl_opts = {
-        "quiet": True,
-        "no_warnings": True,
+        **get_common_opts(),
         "skip_download": True,
-        "noplaylist": True,
     }
 
     try:
@@ -76,6 +91,7 @@ def download():
     try:
         if mode == "audio":
             ydl_opts = {
+                **get_common_opts(),
                 "format": "bestaudio/best",
                 "outtmpl": out_template,
                 "ffmpeg_location": FFMPEG_PATH,
@@ -84,9 +100,6 @@ def download():
                     "preferredcodec": "mp3",
                     "preferredquality": quality,
                 }],
-                "quiet": True,
-                "no_warnings": True,
-                "noplaylist": True,
             }
         else:
             fmt = (
@@ -94,13 +107,11 @@ def download():
                 f"best[height<={quality}][ext=mp4]/best[height<={quality}]/best"
             )
             ydl_opts = {
+                **get_common_opts(),
                 "format": fmt,
                 "outtmpl": out_template,
                 "ffmpeg_location": FFMPEG_PATH,
                 "merge_output_format": "mp4",
-                "quiet": True,
-                "no_warnings": True,
-                "noplaylist": True,
             }
 
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
